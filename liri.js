@@ -1,6 +1,7 @@
 const twitterKeyFile = require("./keys.js");
 const Twitter = require('twitter');
 const spotify = require('spotify');
+const request = require('request')
 
 
 let thisProgram = process.argv[2];
@@ -77,7 +78,28 @@ if(thisProgram === "my-tweets"){
 `);
 
 	if(process.argv[3] === undefined){
-		console.log("\nThank you for using the Spotify Bot! \n\nPlease use the following command format:\n\nnode liri.js spotify-this-song 'song name here'\n\nEXAMPLE:  node liri.js spotify-this-song 'The Sign'");
+		
+
+		spotify.search({ 
+		type: 'track',
+		query: "The Sign Ace of Base"
+
+	}, function(err, data) {
+	    if ( err ) {
+	        console.log('Error occurred: ' + err);
+	        return;
+	    }
+	 	let songInfo = data.tracks.items[0];
+	    console.log("Artist(s): " + songInfo.album.artists[0].name +
+	    	"\nSong's Name: " + songInfo.name +
+	    	"\nPreview Song: " + songInfo.preview_url +
+	    	"\nAlbum: " + songInfo.album.name);
+	
+	});
+
+
+		console.log("\nThank you for using the Spotify Bot! \n\nPlease use the following command format:\n\nnode liri.js spotify-this-song 'song name here'\n\nEXAMPLE:  node liri.js spotify-this-song The Sign");
+
 	}else{
 
 	
@@ -125,15 +147,81 @@ if(thisProgram === "my-tweets"){
 
 
 else if(thisProgram === "movie-this"){
-	console.log("Movie this is currently broken");
-}
+	console.log(`\n
+		        _/_/_/_/_/  _/                 
+                           _/      _/_/_/      _/_/    
+                          _/      _/    _/  _/_/_/_/   
+                         _/      _/    _/  _/          
+                        _/      _/    _/    _/_/_/     
+                                                       
+                                                       
+                                                                              
+      _/      _/                        _/                _/_/_/    _/_/_/    
+     _/_/  _/_/    _/_/    _/      _/        _/_/        _/    _/  _/    _/   
+    _/  _/  _/  _/    _/  _/      _/  _/  _/_/_/_/      _/    _/  _/_/_/      
+   _/      _/  _/    _/    _/  _/    _/  _/            _/    _/  _/    _/     
+  _/      _/    _/_/        _/      _/    _/_/_/      _/_/_/    _/_/_/        
+                                                                              
+
+`);
 
 
+	if(process.argv[3] === undefined){
+		
+		console.log("\nThank you for using the Movie Database Bot! \n\nPlease use the following command format:\n\nnode liri.js movie-this 'movie name here'\n\nEXAMPLE:  node liri.js movie-this Mr. Nobody");
+		var movieTitle = "Mr. Nobody";
+		console.log(movieTitle);
+	}else{
+		for(let i = 3; i < process.argv.length; i++){
+							var buildTitle = "";
+							buildTitle += process.argv[i];
+		 }
+		
+
+		 var movieTitle = buildTitle;
+		 }
+		
+
+		 var options = { method: 'GET',
+		  url: 'https://api.themoviedb.org/3/search/movie',
+		  qs: 
+			   { include_adult: 'false',
+			     page: '1',
+			     query: movieTitle,
+			     language: 'en-US',
+			     api_key: '1a163b49c54b4f871f7f158b7e907c77' },
+			  	 body: '{}' };
+
+		
+
+		request(options, function (error, response, body) {
+  			if (error){
+  			console.log("The database is currently down")
+  			}else{
+  			let movieBody = JSON.parse(body);
+  			let firstResult = movieBody.results[0]
+  				if(firstResult === undefined){
+  					console.log("Hmmm... I don't know that movie. Is there a typo or spacing issue in your search? I'm a little picky!");
+  				}else{
 
 
+  				
+  			console.log("Movie title: " + firstResult.title + 
+  				"\n\nRelease date: " + firstResult.release_date +
+  				"\n\nIMDB rating: " + firstResult.vote_average +
+  				"\n\nCountry of Origin: Feature not found in this API" +
+  				"\n\nOriginal Language: " + firstResult.original_language +
+  				"\n\nPlot: " + firstResult.overview +
+  				"\n\nActors: Feature not found in this API" +
+  				"\n\nRotten Tomatoes Rating and URL : Feature not found in this API"
+  				);
+  			}
+  		}
+  		
+		});
 
 
-
+		}
 
 
 
@@ -214,4 +302,5 @@ else{
 #         _\/\\\\\\\\\\\\/____\//\\\\\\\\/\\_____\//\\\______\/\\\__\//\\\\\\\/\\_____________\/\\\______\//\\\__\//\\\\\\\\/\\__\/\\\___\/\\\____\//\\\\//\\\_____\/\\\___/\\\\\\\\\\__\/\\\___\/\\\___\//\\\\\\\\\\__\/\\\_________ 
 #          _\////////////_______\////////\//_______\///_______\///____\///////\//______________\///________\///____\////////\//___\///____\///______\///__\///______\///___\//////////___\///____\///_____\//////////___\///__________
 
+(these are fun!)
 */
