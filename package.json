@@ -1,0 +1,25 @@
+{
+  "name": "liri-node-app",
+  "version": "1.0.0",
+  "description": "Application to return relevant information based on commands and queries. LIRI",
+  "main": "liri.js",
+  "dependencies": {
+    "request": "^2.79.0",
+    "spotify": "^0.3.0",
+    "twitter": "^1.7.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kanwisher/liri-node-app.git"
+  },
+  "author": "David Kanwisher",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kanwisher/liri-node-app/issues"
+  },
+  "homepage": "https://github.com/kanwisher/liri-node-app#readme"
+}
