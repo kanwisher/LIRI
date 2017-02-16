@@ -1,7 +1,8 @@
 const twitterKeyFile = require("./keys.js");
 const Twitter = require('twitter');
 const spotify = require('spotify');
-const request = require('request')
+const request = require('request');
+const fs = require('fs');
 
 
 let thisProgram = process.argv[2];
@@ -79,23 +80,7 @@ if(thisProgram === "my-tweets"){
 
 	if(process.argv[3] === undefined){
 		
-
-		spotify.search({ 
-		type: 'track',
-		query: "The Sign Ace of Base"
-
-	}, function(err, data) {
-	    if ( err ) {
-	        console.log('Error occurred: ' + err);
-	        return;
-	    }
-	 	let songInfo = data.tracks.items[0];
-	    console.log("Artist(s): " + songInfo.album.artists[0].name +
-	    	"\nSong's Name: " + songInfo.name +
-	    	"\nPreview Song: " + songInfo.preview_url +
-	    	"\nAlbum: " + songInfo.album.name);
-	
-	});
+		var songTitle = "The Sign Ace of Base"
 
 
 		console.log("\nThank you for using the Spotify Bot! \n\nPlease use the following command format:\n\nnode liri.js spotify-this-song 'song name here'\n\nEXAMPLE:  node liri.js spotify-this-song The Sign");
@@ -110,7 +95,9 @@ if(thisProgram === "my-tweets"){
 						buildSong += process.argv[i];
 	 }
 
-	 let songTitle = buildSong;
+	 var songTitle = buildSong;
+
+	}
 
 	spotify.search({ 
 		type: 'track',
@@ -128,7 +115,7 @@ if(thisProgram === "my-tweets"){
 	    	"\nAlbum: " + songInfo.album.name);
 	
 	});
-	}
+	
 }
 
 
@@ -238,8 +225,18 @@ else if(thisProgram === "movie-this"){
 
 
 else if(thisProgram === "do-what-it-says"){
-	console.log("why aren't you doing what I say!!!");
+	fs.readFile("random.txt", 'utf8', function(err, data) {
+						if(err){
+							console.log(error)
+						}else {
+							console.log(data);
+					}
+				}
+
+			);
 }
+
+
 
 
 
