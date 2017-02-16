@@ -5,15 +5,98 @@ const request = require('request');
 const fs = require('fs');
 
 
-let thisProgram = process.argv[2];
 
-let client = new Twitter(twitterKeyFile.twitterKeys);
-let params = {screen_name: process.argv[3],
-	count: 10
+
+
+if (process.argv[3] !== undefined){
+	var buildQuery = "";
+	for(let i = 3; i < process.argv.length; i++){
+	buildQuery += process.argv[i] + " ";
+							
+				}
+}else{
+	buildQuery = null;
+	
+}
+
+
+
+
+
+let userProgram = process.argv[2];
+let userQuery = buildQuery;
+
+
+
+
+
+
+if(userProgram === undefined){
+
+
+	console.log(`
+
+
+:::        ::::::::::: :::::::::  ::::::::::: 
+:+:            :+:     :+:    :+:     :+:     
++:+            +:+     +:+    +:+     +:+     
++#+            +#+     +#++:++#:      +#+     
++#+            +#+     +#+    +#+     +#+     
+#+#            #+#     #+#    #+#     #+#     
+########## ########### ###    ### ########### ` + "\n\nWelcome to LIRI. I have become sentient. What would you like for me to do for you today? \n\nMy current abilities are:\n\nmy-tweets\nspotify-this-song\nmovie-this\ndo-what-it-says")
+
+}else{
+
+
+commandRunner(userProgram, userQuery);
+
+
+}
+
+
+
+
+
+
+
+
+function commandRunner(program, query){
+	if(program ==="my-tweets"){
+		runTweets(query);
+
+	}else if(program ==="spotify-this-song"){
+		runSpotify(query);
+
+	}else if(program === "movie-this"){
+		runMovies(query);
+
+	}else if(program === "do-what-it-says"){
+		runMystery();
+
+	}else{
+		
+		console.log("Not a valid command. Please try my-tweets, spotify-this-song, movie-this, or do-what-it-says");
+	}
+}
+
+
+
+
+
+
+
+
+function runTweets(query){
+
+	let client = new Twitter(twitterKeyFile.twitterKeys);
+	
+	let params = {
+		screen_name: query,
+	    count: 10
 			  };
 
-if(thisProgram === "my-tweets"){
-			console.log(`
+
+		console.log(`
 		M.......MMMMMMMMMMMMMMMMMMMMMMMMMMMMMM8............,MMMMM.......MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
 		..~+++...MMMMMMMMMMMMMMMMMMMMMMMMMMMMM..++++..++++..:MMM...+++:..MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
 		..+++++.......:MMMMMMMMMMMMMMMMMMMMMM8..++++:.++++=..MMM..+++++..MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
@@ -30,28 +113,31 @@ if(thisProgram === "my-tweets"){
 		MMMMMMM8?+++++ZMMMMMMN7+ZMMMMMD+?DMMMMMMM7?MMMMMMMMO+++IMMMMMMMN7+++NMMMMMMN7+IDMMMMMM8+8MMMMMMMMMMM
 		`);
 
-	if(process.argv[3] === undefined){
+	if(query === null){
 		console.log("\nThank you for using the Twitter Bot! \n\n Please use the following command format:\n\n node liri.js my-tweets TWITTERUSERNAME\n\n EXAMPLE:  node liri.js my-tweets realDonaldTrump");
+	
 	}else{
-	client.get('statuses/user_timeline', params, function(error, tweets, response) {
-	  if (!error) {
-	  	let tweetCount = 1;
-	  	tweets.forEach(function(arrayItem) {
-	  		let buildString = `\n\n\n                      -----------TWEET ${tweetCount}---------`;
-	  		buildString += "\n\n\n";
-	  		buildString += arrayItem.text;
-	  		
-	  		tweetCount++
-	  		console.log(buildString)
-	  		
-	  	});
-	}else if (error){
-		console.log("\n    Username was not found \n\n Please use the following format:\n\n node liri.js my-tweets TWITTERUSERNAME");
-		}
+	
+		client.get('statuses/user_timeline', params, function(error, tweets, response) {
+		  if (!error) {
+		  	let tweetCount = 1;
+		  	tweets.forEach(function(arrayItem) {
+		  		let buildString = `\n\n\n                      -----------TWEET ${tweetCount}---------`;
+		  		buildString += "\n\n\n";
+		  		buildString += arrayItem.text;
+		  		
+		  		tweetCount++
+		  		console.log(buildString)
+		  		
+		  	});
+			}else if (error){
+				console.log("\n    Username was not found \n\n Please use the following format:\n\n node liri.js my-tweets TWITTERUSERNAME");
+			}
 
-	});
+		});
 	}
 
+}
 
 
 
@@ -63,7 +149,8 @@ if(thisProgram === "my-tweets"){
 
 
 
-}else if(thisProgram === "spotify-this-song"){
+function runSpotify(query){
+
 	console.log(`
 
 
@@ -77,46 +164,44 @@ if(thisProgram === "my-tweets"){
 
 
 `);
+	var songTitle = "";
+	
 
-	if(process.argv[3] === undefined){
+	if(query === null){
 		
-		var songTitle = "The Sign Ace of Base"
+		songTitle = "The Sign Ace of Base"
 
 
 		console.log("\nThank you for using the Spotify Bot! \n\nPlease use the following command format:\n\nnode liri.js spotify-this-song 'song name here'\n\nEXAMPLE:  node liri.js spotify-this-song The Sign");
 
 	}else{
 
-	
-
-
-	for(let i = 3; i < process.argv.length; i++){
-						var buildSong = "";
-						buildSong += process.argv[i];
-	 }
-
-	 var songTitle = buildSong;
-
-	}
+		 songTitle = query;
+		 console.log(query);
+		}
 
 	spotify.search({ 
 		type: 'track',
 		query: songTitle
 
-	}, function(err, data) {
-	    if ( err ) {
-	        console.log('Error occurred: ' + err);
-	        return;
-	    }
-	 	let songInfo = data.tracks.items[0];
-	    console.log("Artist(s): " + songInfo.album.artists[0].name +
-	    	"\nSong's Name: " + songInfo.name +
-	    	"\nPreview Song: " + songInfo.preview_url +
-	    	"\nAlbum: " + songInfo.album.name);
+		}, function(err, data) {
+		    if ( err ) {
+		        console.log('Error occurred: ' + err);
+		        return;
+		    }else{
+		    	
+		    
+		 	let songInfo = data.tracks.items[0];
+		    console.log("Artist(s): " + songInfo.album.artists[0].name +
+		    	"\nSong's Name: " + songInfo.name +
+		    	"\nPreview Song: " + songInfo.preview_url +
+		    	"\nAlbum: " + songInfo.album.name);
+		
+			}
 	
-	});
+		});
 	
-}
+	}
 
 
 
@@ -133,7 +218,7 @@ if(thisProgram === "my-tweets"){
 
 
 
-else if(thisProgram === "movie-this"){
+function runMovies(query){
 	console.log(`\n
 		        _/_/_/_/_/  _/                 
                            _/      _/_/_/      _/_/    
@@ -152,12 +237,12 @@ else if(thisProgram === "movie-this"){
 
 `);
 
-
-	if(process.argv[3] === undefined){
+	var movieTitle = ""
+	if(query === null){
 		
 		console.log("\nThank you for using the Movie Database Bot! \n\nPlease use the following command format:\n\nnode liri.js movie-this 'movie name here'\n\nEXAMPLE:  node liri.js movie-this Mr. Nobody");
-		var movieTitle = "Mr. Nobody";
-		console.log(movieTitle);
+		movieTitle = "Mr. Nobody";
+		
 	}else{
 		for(let i = 3; i < process.argv.length; i++){
 							var buildTitle = "";
@@ -165,7 +250,7 @@ else if(thisProgram === "movie-this"){
 		 }
 		
 
-		 var movieTitle = buildTitle;
+		 movieTitle = buildTitle;
 		 }
 		
 
@@ -208,7 +293,7 @@ else if(thisProgram === "movie-this"){
 		});
 
 
-		}
+}
 
 
 
@@ -224,60 +309,20 @@ else if(thisProgram === "movie-this"){
 
 
 
-else if(thisProgram === "do-what-it-says"){
+function runMystery(){
 	fs.readFile("random.txt", 'utf8', function(err, data) {
 						if(err){
 							console.log(error)
 						}else {
-							console.log(data);
-					}
-				}
+							textArray = data.split(",");
+							
+							commandRunner(textArray[0], textArray[1])
+							
+						}
+				
 
-			);
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-else{
-	console.log(`
-
-
-:::        ::::::::::: :::::::::  ::::::::::: 
-:+:            :+:     :+:    :+:     :+:     
-+:+            +:+     +:+    +:+     +:+     
-+#+            +#+     +#++:++#:      +#+     
-+#+            +#+     +#+    +#+     +#+     
-#+#            #+#     #+#    #+#     #+#     
-########## ########### ###    ### ########### ` + "\n\nWelcome to LIRI. I have become sentient. What would you like for me to do for you today? \n\nMy current abilities are:\n\nmy-tweets\nspotify-this-song\nmovie-this\ndo-what-it-says")
-}
-
-
-
-
-
-
-
-
-
-
+			});
+	}
 
 
 
