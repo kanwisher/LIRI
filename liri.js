@@ -15,7 +15,7 @@ if (process.argv[3] !== undefined){
 							
 				}
 }else{
-	buildQuery = null;
+	buildQuery = "";
 	
 }
 
@@ -25,6 +25,7 @@ if (process.argv[3] !== undefined){
 
 let userProgram = process.argv[2];
 let userQuery = buildQuery;
+let commandString = "node " + userProgram + " " +  userQuery;
 
 
 
@@ -62,15 +63,19 @@ commandRunner(userProgram, userQuery);
 
 function commandRunner(program, query){
 	if(program ==="my-tweets"){
+		fs.appendFile("log.txt", commandString + "\n\n")
 		runTweets(query);
 
 	}else if(program ==="spotify-this-song"){
+		fs.appendFile("log.txt", commandString + "\n\n")
 		runSpotify(query);
 
 	}else if(program === "movie-this"){
+		fs.appendFile("log.txt", commandString + "\n\n")
 		runMovies(query);
 
 	}else if(program === "do-what-it-says"){
+		fs.appendFile("log.txt", commandString + "\n\n")
 		runMystery();
 
 	}else{
@@ -127,7 +132,7 @@ function runTweets(query){
               ...,,::::::::::::::,..    
 		`);
 
-	if(query === null){
+	if(query === ""){
 		console.log("\nThank you for using the Twitter Bot! \n\n Please use the following command format:\n\n node liri.js my-tweets TWITTERUSERNAME\n\n EXAMPLE:  node liri.js my-tweets realDonaldTrump");
 	
 	}else{
@@ -142,6 +147,8 @@ function runTweets(query){
 		  		
 		  		tweetCount++
 		  		console.log(buildString)
+		  		fs.appendFile("log.txt", buildString + "\n")
+		  		
 		  		
 		  	});
 			}else if (error){
@@ -181,7 +188,7 @@ function runSpotify(query){
 	var songTitle = "";
 	
 
-	if(query === null){
+	if(query === ""){
 		
 		songTitle = "The Sign Ace of Base"
 
@@ -206,10 +213,12 @@ function runSpotify(query){
 		    	
 		    
 		 	let songInfo = data.tracks.items[0];
-		    console.log("Artist(s): " + songInfo.album.artists[0].name +
+		 	let allSongInfo = "Artist(s): " + songInfo.album.artists[0].name +
 		    	"\nSong's Name: " + songInfo.name +
 		    	"\nPreview Song: " + songInfo.preview_url +
-		    	"\nAlbum: " + songInfo.album.name);
+		    	"\nAlbum: " + songInfo.album.name;
+		    console.log(allSongInfo);
+		    fs.appendFile("log.txt", allSongInfo + "\n\n")
 		
 			}
 	
@@ -252,7 +261,7 @@ function runMovies(query){
 `);
 
 	var movieTitle = ""
-	if(query === null){
+	if(query === ""){
 		
 		console.log("\nThank you for using the Movie Database Bot! \n\nPlease use the following command format:\n\nnode liri.js movie-this 'movie name here'\n\nEXAMPLE:  node liri.js movie-this Mr. Nobody");
 		movieTitle = "Mr. Nobody";
@@ -291,16 +300,18 @@ function runMovies(query){
   				}else{
 
 
-  				
-  			console.log("Movie title: " + firstResult.title + 
+  			let allMovieInfo = "Movie title: " + firstResult.title + 
   				"\n\nRelease date: " + firstResult.release_date +
   				"\n\nIMDB rating: " + firstResult.vote_average +
   				"\n\nCountry of Origin: Feature not found in this API" +
   				"\n\nOriginal Language: " + firstResult.original_language +
   				"\n\nPlot: " + firstResult.overview +
   				"\n\nActors: Feature not found in this API" +
-  				"\n\nRotten Tomatoes Rating and URL : Feature not found in this API"
-  				);
+  				"\n\nRotten Tomatoes Rating and URL : Feature not found in this API";
+  			
+  			console.log(allMovieInfo);
+
+  			fs.appendFile("log.txt", allMovieInfo + "\n\n")
   			}
   		}
   		
